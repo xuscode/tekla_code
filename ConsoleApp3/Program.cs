@@ -19,9 +19,9 @@ namespace ConsoleApp3
 
        
             tekla_class aa = new tekla_class();
-            Model bb = new Model();
+           
 
-            aa.CreatePadFootings(bb);
+            aa.CreatePadFootings();
            
             
         }

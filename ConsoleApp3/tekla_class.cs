@@ -11,39 +11,65 @@ namespace ConsoleApp3
     {
 
 
-        public void CreatePadFootings(Model MyModel)
+        public void CreatePadFootings()
         {
+            Model MyModel = new Model();
+
             // Always remember to check that you really have working connection
             if (MyModel.GetConnectionStatus())
             {
-                // Loop through X-axis  (these loops should be changed to match current grid)
-                for (double PositionX = 0.0; PositionX <= 12000.0; PositionX += 3000.0)
-                {
-                    // In first and in last line
-                    if (PositionX.Equals(0.0) || PositionX.Equals(12000.0))
-                    {
-                        // Loop through Y-axis to get pad footings on the longer sides of the grid
-                        for (double PositionY = 0.0; PositionY <= 30000.0; PositionY += 6000.0)
-                        {
-                            CreateFootingAndColumn(PositionX, PositionY);
-                        }
-                    }
-                    else
-                    {
-                        CreateFootingAndColumn(PositionX, 0.0);
-                        CreateFootingAndColumn(PositionX, 30000.0);
-                    }
-                }
+
+                // Create grid 
+
+                Grid grd = new Grid();
+                //grd.ExtensionLeftX = 4000.00;
+
+                grd.CoordinateX = "0.00 2*6000.00";
+                grd.CoordinateY = "0.00 2*6000.00";
+                grd.CoordinateZ = "0.00 4200.00 8400.00 9000.00";
+
+
+                grd.IsMagnetic = true;
+
+                bool Result = false;
+                Result = grd.Insert();
+
+
+
+
+
+
+
+
+
+                //// Loop through X-axis  (these loops should be changed to match current grid)
+                //for (double PositionX = 0.0; PositionX <= 20000.0; PositionX += 3000.0)
+                //{
+                //    // In first and in last line
+                //    if (PositionX.Equals(0.0) || PositionX.Equals(12000.0))
+                //    {
+                //        // Loop through Y-axis to get pad footings on the longer sides of the grid
+                //        for (double PositionY = 0.0; PositionY <= 30000.0; PositionY += 6000.0)
+                //        {
+                //            CreateFootingAndColumn(PositionX, PositionY,"");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        CreateFootingAndColumn(PositionX, 0.0, "");
+                //        CreateFootingAndColumn(PositionX, 30000.0, "");
+                //    }
+                //}
                 // Always remember to commit changes to Tekla Structures, otherwise some things might be left in uncertain state
                 MyModel.CommitChanges();
             }
         }
 
-        public void CreateFootingAndColumn(double PositionX, double PositionY)
+        public void CreateFootingAndColumn(double PositionX, double PositionY, String iColumnName)
         {
             const double FootingSize = 1500;
             CreatePadFooting(PositionX, PositionY, FootingSize);
-            CreateColumn(PositionX, PositionY);
+            CreateColumn(PositionX, PositionY, iColumnName);
         }
 
 
@@ -73,11 +99,11 @@ namespace ConsoleApp3
         }
 
 
-        public static ModelObject CreateColumn(double PositionX, double PositionY)
+        public static ModelObject CreateColumn(double PositionX, double PositionY,String iColumnName)
         {
             Beam Column = new Beam();
 
-            Column.Name = "COLUMN";
+            Column.Name = iColumnName;
             Column.Profile.ProfileString = "380*380";
             Column.Material.MaterialString = "C50";
             Column.Class = "2";
